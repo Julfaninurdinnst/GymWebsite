@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import SectionWrappper from './SectionWrappper'
 import { SCHEMES, WORKOUTS } from '../utils/swoldier'
+import Button from './Button'
 function Header(props) {
   const { index, title, description } = props
   return (
@@ -13,11 +14,10 @@ function Header(props) {
     </div>
   )
 }
-export default function Generator() {
+export default function Generator(props) {
+  const { muscles, setMuscles, poison, setPoison, goals, setGoals, updateWorkout } = props
   const [showModal, setShowModal] = useState(true)
-  const [poison, setPoison] = useState('individual')
-  const [muscles, setMuscles] = useState([])
-  const [goals, setGoals] = useState("strength_power")
+
   function toggleModal() {
     setShowModal(!showModal)
   }
@@ -26,14 +26,18 @@ export default function Generator() {
       setMuscles(muscles.filter(val => val !== muscleGroup))
       return
     }
-    if (muscles.length > 3) {
+    if (muscles.length > 2) {
       return
     }
     if (poison !== 'individual') {
       setMuscles([muscleGroup])
+      setShowModal(false)
       return
     }
     setMuscles([...muscles, muscleGroup])
+    if (muscles.length === 2) {
+      setShowModal(false)
+    }
   }
   return (
     <SectionWrappper header={'generate your workout'} title={['It\'s', 'Huge', 'o\'clock']}>
@@ -42,9 +46,8 @@ export default function Generator() {
         {Object.keys(WORKOUTS).map((type, typeIndex) => {
           return (
             <button onClick={() => {
-              return (
-                setPoison(type)
-              )
+              setMuscles([])
+              setPoison(type)
             }} className={'bg-slate-950 border  py-4 rounded-lg duration-200 hover:border-blue-700' + (type === poison ? ' border-blue-700' : ' border-blue-400')} key={typeIndex}>
               <p className='capitalize'>{type.replaceAll('_', " ")}</p>
             </button>
@@ -54,8 +57,8 @@ export default function Generator() {
       <Header index={'02'} title={'Lock on targets'} description={'Select the muscles judged for annihilayion.'} />
       <div className="bg-slate-950  border boder-solid border-blue-400 rounded-lg flex flex-col">
         <button onClick={toggleModal} className='relative flex p-3 justify-center items-center'>
-          <p>
-            Select muscle groups
+          <p className='capitalize'>
+            {muscles.length == 0 ? 'Select muscle groups' : muscles.join(' ')}
           </p>
           <i className='fa-solid fa-caret-down absolute right-3 top-1/2 -translate-y-1/2 '></i>
         </button>
@@ -65,7 +68,8 @@ export default function Generator() {
               return (
                 <button key={muscleGroupIndex} onClick={() => {
                   updateMuscles(muscleGroup)
-                }} className={'hover:text-blue-400 duration-200' + (muscles.includes(muscleGroup) ? 'text-blue-400' : '')}>
+                }} className={`hover:text-blue-400 duration-200 ${muscles.includes(muscleGroup) ? 'text-blue-400' : ''}`}>
+
                   <p className='uppercase'>{muscleGroup.replaceAll('_', " ")}</p>
                 </button>
               )
@@ -88,7 +92,7 @@ export default function Generator() {
           )
         })}
       </div>
-
-    </SectionWrappper>
+      <Button func={updateWorkout} text={"Formulate"}></Button>
+    </SectionWrappper >
   )
 }

@@ -1,7 +1,9 @@
 import React from 'react'
-
-export default function Workout() {
+import SectionWrappper from './SectionWrappper'
+export default function Workout(props) {
+  const { workout } = props
   return (
-    <div>Workout</div>
+    <SectionWrappper header={'welcome to'} title={['The', 'DANGER', 'zone']}>
+    </SectionWrappper>
   )
 }
