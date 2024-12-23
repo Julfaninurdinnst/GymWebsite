@@ -1,6 +1,7 @@
 import Hero from "./components/Hero"
 import Generator from "./components/Generator"
 import Workout from "./components/Workout"
+import Footer from "./components/Footer"
 import { useState } from "react"
 import { generateWorkout } from "./utils/functions"
 
@@ -14,9 +15,10 @@ function App() {
     if (muscles.length < 1) {
       return
     }
-    let newWorkout = generateWorkout([poison, muscles, goals])
-    console.log(newWorkout)
+    let newWorkout = generateWorkout({ muscles, poison, goal: goals })
+
     setWorkout(newWorkout)
+    window.location.href = "#myworkout";
   }
   return (
     <main className="min-h-screen flex flex-col bg-gradient-to-r from-slate-800 to-slate-950 text-white text-sm sm:text-base" >
@@ -31,6 +33,7 @@ function App() {
         updateWorkout={updateWorkout}
       />
       {workout && (<Workout workout={workout} />)}
+      <Footer />
     </main>
   )
 }
